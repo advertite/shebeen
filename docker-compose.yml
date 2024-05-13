@@ -6,7 +6,8 @@ services:
       - 'mariadb_data:/bitnami/mariadb'
     configs:
       - source:  hazb2b_cors_v1
-        target: /opt/bitnami/nginx/conf/binami/cors.conf   
+        target: /opt/bitnami/nginx/conf/bitnami/cors.conf   
+        
     environment:
       - MARIADB_ROOT_PASSWORD=1nPnfdts.adv
       - MARIADB_USER=advertite.de
