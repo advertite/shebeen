@@ -1,0 +1,90 @@
+version: '3.6'
+services:
+  mariadb:
+    image: docker.io/bitnami/mariadb:latest
+    volumes:
+      - 'mariadb_data:/bitnami/mariadb'
+    configs:
+      - source:  hazb2b_cors_v1
+        target: /opt/bitnami/nginx/conf/binami/cors.conf   
+    environment:
+      - MARIADB_ROOT_PASSWORD=1nPnfdts.adv
+      - MARIADB_USER=advertite.de
+      - MARIADB_PASSWORD=wp#adv!#012.de433#ee
+      - MARIADB_DATABASE=bitnami_wordpress
+    networks:
+      - shebeen
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 600M
+        reservations:
+          memory: 600M
+      placement:
+        constraints:
+          - node.hostname == node01 
+          
+  wordpress:
+    image: docker.io/bitnami/wordpress-nginx:5.9.1
+    ports:
+      - '8130:8080'
+    volumes:
+      - 'new_wordpress_data:/bitnami/wordpress'
+    depends_on:
+      - mariadb 
+    environment:
+      - WORDPRESS_USERNAME=Wordpressmeister
+      - WORDPRESS_BLOG_NAME=shebeen.de
+      - WORDPRESS_PASSWORD=|2yVA`~bkTwB5hmSWe
+      - WORDPRESS_EMAIl=error@advertite.de
+      - WORDPRESS_DATABASE_HOST=mariadb
+      - WORDPRESS_DATABASE_PORT_NUMBER=3306
+      - WORDPRESS_DATABASE_USER=advertite.de
+      - WORDPRESS_DATABASE_PASSWORD=wp#adv!#012.de433#ee
+      - WORDPRESS_TABLE_PREFIX=sb_
+      - WORDPRESS_DATABASE_NAME=bitnami_wordpress
+      - WORDPRESS_ENABLE_HTTPS=no
+      - WORDPRESS_ENABLE_REVERSE_PROXY=yes
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - shebeen
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 600M
+        reservations:
+          memory: 600M
+      placement:
+        constraints:
+          - node.hostname == node01
+
+
+networks:
+  shebeen
+
+configs:
+  hazb2b_cors_v1:
+    external: true
+
+volumes:
+  new_wordpress_data:
+    driver_opts:
+      type: "nfs"
+      o: "addr=10.10.30.171,nolock,noatime,soft,rw"
+      device: ":/srv/prod/shebeen.de/wordpress"
+  mariadb_data:
+    driver_opts:
+      type: "nfs"
+      o: "addr=10.10.30.171,nolock,noatime,soft,rw"
+      device: ":/srv/prod/shebeen.de/data"
