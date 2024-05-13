@@ -34,9 +34,7 @@ services:
       - '8130:8080'
     volumes:
       - 'new_wordpress_data:/bitnami/wordpress'
-    configs:
-      - source:  hazb2b_cors_v1
-        target: /opt/bitnami/nginx/conf/bitnami/cors.conf         
+    
     depends_on:
       - mariadb 
     environment:
