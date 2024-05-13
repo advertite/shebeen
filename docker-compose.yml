@@ -71,7 +71,7 @@ services:
 
 
 networks:
-  shebeen
+  shebeen:
 
 configs:
   hazb2b_cors_v1:
